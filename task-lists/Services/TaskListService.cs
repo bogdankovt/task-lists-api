@@ -24,6 +24,12 @@ namespace task_lists_api.task_lists
             return TaskListContext.Lists.OrderBy(l => l.ListId).ToList();
         }
 
+        internal TaskListEntity CreateNewList(TaskListEntity item) {
+            TaskListContext.Lists.Add(item);
+            TaskListContext.SaveChanges();
+            return item;
+        }
+
         internal TaskListEntity GetListById(int id)
         {
             return TaskListContext.Lists
@@ -55,12 +61,6 @@ namespace task_lists_api.task_lists
         // internal TaskListEntity GetListById(int id) {
         //     return TaskListContext.Lists.First(l => l.ListId == id);
         // }
-
-        internal TaskListEntity CreateNewList(TaskListEntity item) {
-            TaskListContext.Lists.Add(item);
-            TaskListContext.SaveChanges();
-            return item;
-        }
 
 
         // internal TaskListEntity Replace(TaskListEntity item)
@@ -110,5 +110,18 @@ namespace task_lists_api.task_lists
         //     items[listId].subTasks.RemoveAt(id);
         //     return removeItem;
         // }
+
+        //dashboard
+        internal int getCountTasksToday()
+        {
+            return TaskListContext.Tasks.Where(t => t.DueDate.Equals(DateTime.Today)).Count();
+        }
+
+        internal Dictionary<string, int> getCountNotDoneTasksByList()
+        {
+            return TaskListContext.Lists
+            .Include(l => l.Tasks)
+            .ToDictionary(l => l.Title + l.ListId, l => l.Tasks.Count == 0 ? -1 : l.Tasks.Where(t => t.IsDone.Equals(false)).Count());
+        }
     }
 }
