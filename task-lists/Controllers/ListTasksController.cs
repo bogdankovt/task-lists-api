@@ -22,14 +22,8 @@ namespace task_lists_api.task_lists   //ListTasksController
         [HttpGet]
         public ActionResult<IEnumerable<TaskEntity>> GetTasksForList(int listId)
         {
-                return service.GetTasks(listId);
+                return service.GetTasksForList(listId);
         }
-
-        // [HttpGet("{id}")]
-        // public ActionResult<Task> GetTaskById(int listId, int id)
-        // {
-        //     return service.GetTasks(listId)[id];
-        // }
 
         [HttpPost]
         public ActionResult<TaskEntity> CreateTaskForList(int listId, TaskEntity task)

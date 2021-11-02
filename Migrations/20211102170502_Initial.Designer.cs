@@ -10,7 +10,7 @@ using task_lists_api.task_lists.Contexts;
 namespace task_lists_api.Migrations
 {
     [DbContext(typeof(TaskListContext))]
-    [Migration("20211102105742_Initial")]
+    [Migration("20211102170502_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
