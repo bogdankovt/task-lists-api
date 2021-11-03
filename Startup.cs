@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using task_lists_api.task_lists;
 using task_lists_api.task_lists.Contexts;
-
 namespace task_lists_api
 {
     public class Startup
@@ -33,6 +32,7 @@ namespace task_lists_api
                 options
                     .UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                     .UseSnakeCaseNamingConvention()
+                    .LogTo(Console.WriteLine)
             );
             services.AddScoped<TaskListService>();
 

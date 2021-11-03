@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using task_lists_api.task_lists.Contexts;
+using task_lists_api.task_lists.DTO;
 using task_lists_api.task_lists.Entities;
 
 namespace task_lists_api.task_lists
@@ -24,6 +25,7 @@ namespace task_lists_api.task_lists
             return TaskListContext.Lists.OrderBy(l => l.ListId).ToList();
         }
 
+
         internal TaskListEntity CreateNewList(TaskListEntity item) {
             TaskListContext.Lists.Add(item);
             TaskListContext.SaveChanges();
@@ -40,9 +42,20 @@ namespace task_lists_api.task_lists
 
 
         //tasks
-        internal List<TaskEntity> GetTasksForList(int listId)
+        internal List<TaskDTO> GetOpenTasksForList(int listId)
         {
-            return GetListById(listId).Tasks;
+            return GetListById(listId).Tasks
+            .Where(t => t.IsDone.Equals(false))
+            .Select(t => new TaskDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate})
+            .ToList();
+        }
+
+        internal List<TaskDTO> GetAllTaskForList(int listId)
+        {
+            return GetListById(listId).Tasks
+            .Select(t => new TaskDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate})
+            .OrderBy(t => t.IsDone)
+            .ToList();
         }
 
         internal TaskEntity CreateTaskForList(int listId, TaskEntity task)
@@ -112,16 +125,45 @@ namespace task_lists_api.task_lists
         // }
 
         //dashboard
+
+        internal ActionResult<DashboardDTO> createDashboard() => new DashboardDTO()
+        {
+            TasksForToday = getCountTasksToday(),
+            lists = getCountNotDoneTasksByList()
+
+        };
         internal int getCountTasksToday()
         {
             return TaskListContext.Tasks.Where(t => t.DueDate.Equals(DateTime.Today)).Count();
         }
 
-        internal Dictionary<string, int> getCountNotDoneTasksByList()
-        {
+        internal List<ListDashboardDTO> getCountNotDoneTasksByList()
+        {   
             return TaskListContext.Lists
             .Include(l => l.Tasks)
-            .ToDictionary(l => l.Title + l.ListId, l => l.Tasks.Count == 0 ? -1 : l.Tasks.Where(t => t.IsDone.Equals(false)).Count());
+            .Select(l => new ListDashboardDTO() { ListId = l.ListId, title = l.Title, countNotDoneTask = l.Tasks.Where(t => t.IsDone.Equals(false)).Count()})
+            .OrderBy(l => l.ListId)
+            .ToList();
+
+                // return TaskListContext.Lists.Join(TaskListContext.Tasks,
+                //      l => l.ListId,
+                //      t => t.ListId,
+
+                //     (l, t) => new ListDashboardDTO(){ListId = l.ListId, title = l.Title, countNotDoneTask = 1}
+                // ).ToList();
+        }
+
+
+
+        //Collection Today
+        internal List<TaskCollectioTodayDTO> createCollectionToday()
+        {
+            return TaskListContext.Tasks
+            .Include(t => t.List)
+            .Where(t => t.DueDate.Equals(DateTime.Today))
+            .Select(t => new TaskCollectioTodayDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate, ListTitle = t.List.Title})
+            .OrderBy(t => t.IsDone)
+            .ToList();
         }
     }
 }

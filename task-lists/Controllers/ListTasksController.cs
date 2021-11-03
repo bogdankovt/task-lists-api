@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using task_lists_api.task_lists.DTO;
 using task_lists_api.task_lists.Entities;
 
 namespace task_lists_api.task_lists   //ListTasksController
@@ -20,10 +21,11 @@ namespace task_lists_api.task_lists   //ListTasksController
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TaskEntity>> GetTasksForList(int listId)
-        {
-                return service.GetTasksForList(listId);
+        public ActionResult<IEnumerable<TaskDTO>> GetTasksForList(int listId, bool all)
+        {    
+            return all ? service.GetAllTaskForList(listId) : service.GetOpenTasksForList(listId); 
         }
+
 
         [HttpPost]
         public ActionResult<TaskEntity> CreateTaskForList(int listId, TaskEntity task)

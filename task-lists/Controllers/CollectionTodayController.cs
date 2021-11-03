@@ -8,19 +8,19 @@ using task_lists_api.task_lists.DTO;
 
 namespace task_lists.Controllers
 {
-    [Route("/dashboard")]
+    [Route("/collection/today")]
     [ApiController]
-    public class DashboardController : ControllerBase
+    public class CollectionTodayController : ControllerBase
     {
         private TaskListService service;
 
-        public DashboardController(TaskListService service)
+        public CollectionTodayController(TaskListService service)
         {
             this.service = service;
         }
 
         [HttpGet]
-        public ActionResult<DashboardDTO> GetDashboard() => service.createDashboard();
+        public ActionResult<List<TaskCollectioTodayDTO>> GetCollectionToday() => service.createCollectionToday();
         
     }
 }
