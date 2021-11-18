@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "dQhVhgF0VCJQdyPFNJhQ2TixdyQOa3jSrO8FCgmlNd2sDREyfsXHIS4FonZU8kaPrTNKXlMBs+GhQiSKqbhMxg==",
+  "dgSpecHash": "sRb5dauf8f3gj2DDPZoJq47HZa0sS+MDIU1DkDnj2jAt+L4x8Cm/xtKPX4XYHak4Fw3oG/+tOt62h7WxSwNdZQ==",
   "success": true,
   "projectFilePath": "/home/intern/projects/task-lists-api/task-lists-api.csproj",
   "expectedPackageFiles": [

@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[*, )"
             },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[*, )"
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[*, )"

@@ -58,11 +58,11 @@ namespace task_lists_api.task_lists
             .ToList();
         }
 
-        internal TaskEntity CreateTaskForList(int listId, TaskEntity task)
+        internal TaskDTO CreateTaskForList(int listId, TaskEntity task)
         {
             GetListById(listId).Tasks.Add(task);
             TaskListContext.SaveChanges();
-            return task;
+            return new TaskDTO(){TaskId = task.TaskId, Title = task.Title, Desc = task.Desc, IsDone = task.IsDone, DueDate = task.DueDate};
         }
 
         // internal TaskListEntity GetListByIdWithTasks(int id) {

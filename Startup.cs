@@ -32,7 +32,7 @@ namespace task_lists_api
                 options
                     .UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                     .UseSnakeCaseNamingConvention()
-                    .LogTo(Console.WriteLine)
+                    // .LogTo(Console.WriteLine)
             );
             services.AddScoped<TaskListService>();
 
@@ -58,6 +58,12 @@ namespace task_lists_api
 
             app.UseRouting();
 
+            app.UseCors(c => c
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .SetIsOriginAllowed(origin => true));
+                
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -26,12 +26,10 @@ namespace task_lists_api.task_lists   //ListTasksController
             return all ? service.GetAllTaskForList(listId) : service.GetOpenTasksForList(listId); 
         }
 
-
         [HttpPost]
-        public ActionResult<TaskEntity> CreateTaskForList(int listId, TaskEntity task)
+        public ActionResult<TaskDTO> CreateTaskForList(int listId, TaskEntity task)
         {   
-            service.CreateTaskForList(listId, task);
-            return task;
+            return service.CreateTaskForList(listId, task);
         }
 
         // [HttpPut("{id}")]
