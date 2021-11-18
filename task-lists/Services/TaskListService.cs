@@ -46,14 +46,14 @@ namespace task_lists_api.task_lists
         {
             return GetListById(listId).Tasks
             .Where(t => t.IsDone.Equals(false))
-            .Select(t => new TaskDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate})
+            .Select(TaskDTO.FromEntity)
             .ToList();
         }
 
         internal List<TaskDTO> GetAllTaskForList(int listId)
         {
             return GetListById(listId).Tasks
-            .Select(t => new TaskDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate})
+            .Select(TaskDTO.FromEntity)
             .OrderBy(t => t.IsDone)
             .ToList();
         }
@@ -62,8 +62,9 @@ namespace task_lists_api.task_lists
         {
             GetListById(listId).Tasks.Add(task);
             TaskListContext.SaveChanges();
-            return new TaskDTO(){TaskId = task.TaskId, Title = task.Title, Desc = task.Desc, IsDone = task.IsDone, DueDate = task.DueDate};
+            return TaskDTO.FromEntity(task);
         }
+
 
 
 
