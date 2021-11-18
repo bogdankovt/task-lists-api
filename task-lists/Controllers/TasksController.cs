@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using task_lists_api.task_lists.DTO;
 
 namespace task_lists_api.task_lists   
 {
@@ -55,10 +56,10 @@ namespace task_lists_api.task_lists
         //     return patchedItem;
         // }
 
-        // [HttpDelete("{id}")] //remove list id
-        // public ActionResult<Task> DeleteTaskFromList(int listId, int id)
-        // {
-        //     return service.DeleteTaskFromList(listId, id);
-        // }
+        [HttpDelete("{id}")] //remove list id
+        public ActionResult<TaskDTO> deleteTask(int id)
+        {
+            return service.deleteTask(id);
+        }
     }
 }

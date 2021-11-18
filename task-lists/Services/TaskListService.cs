@@ -41,7 +41,7 @@ namespace task_lists_api.task_lists
         }
 
 
-        //tasks
+        //tasks lists
         internal List<TaskDTO> GetOpenTasksForList(int listId)
         {
             return GetListById(listId).Tasks
@@ -63,6 +63,18 @@ namespace task_lists_api.task_lists
             GetListById(listId).Tasks.Add(task);
             TaskListContext.SaveChanges();
             return new TaskDTO(){TaskId = task.TaskId, Title = task.Title, Desc = task.Desc, IsDone = task.IsDone, DueDate = task.DueDate};
+        }
+
+
+
+
+        //tasks 
+        internal TaskDTO deleteTask(int id)
+        {
+            var removedTask = TaskListContext.Tasks.Where(t => t.TaskId == id).First();
+            TaskListContext.Tasks.Remove(removedTask);
+            TaskListContext.SaveChanges();
+            return new TaskDTO(){TaskId = removedTask.TaskId, Title = removedTask.Title, Desc = removedTask.Desc, IsDone = removedTask.IsDone, DueDate = removedTask.DueDate};
         }
 
         // internal TaskListEntity GetListByIdWithTasks(int id) {
