@@ -77,6 +77,21 @@ namespace task_lists_api.task_lists
             return new TaskDTO(){TaskId = removedTask.TaskId, Title = removedTask.Title, Desc = removedTask.Desc, IsDone = removedTask.IsDone, DueDate = removedTask.DueDate};
         }
 
+
+        //tasks-edit
+
+        internal TaskDTO replaceTask(TaskDTO task) {
+            var replacedTask = TaskListContext.Tasks.Where(t => t.TaskId == task.TaskId).First();
+
+            replacedTask.Title = task.Title;
+            replacedTask.Desc = task.Desc;
+            replacedTask.IsDone = task.IsDone;
+            replacedTask.DueDate = task.DueDate;
+
+            TaskListContext.SaveChanges();
+            return task;
+        }
+
         // internal TaskListEntity GetListByIdWithTasks(int id) {
         //     return TaskListContext.Lists                
         //         .Where(l => l.ListId == id)

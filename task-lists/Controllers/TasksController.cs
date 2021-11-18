@@ -56,6 +56,14 @@ namespace task_lists_api.task_lists
         //     return patchedItem;
         // }
 
+
+        //tasks edit
+        [HttpPut("{id}/edit")] //remove list id
+        public ActionResult<TaskDTO> replaceTask(TaskDTO task) 
+        {
+            return service.replaceTask(task);
+        }
+
         [HttpDelete("{id}")] //remove list id
         public ActionResult<TaskDTO> deleteTask(int id)
         {
