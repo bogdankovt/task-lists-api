@@ -35,54 +35,43 @@ namespace task_lists_api.task_lists
         internal TaskListEntity GetListById(int id)
         {
             return TaskListContext.Lists
-                .Where(l => l.ListId == id)
-                .Include(l => l.Tasks)
-                .First();
+                    .Include(l => l.Tasks)
+                    .FirstOrDefault(l => l.ListId == id);
         }
-
-
-        //tasks lists
-        internal List<TaskDTO> GetOpenTasksForList(int listId)
-        {
-            return GetListById(listId).Tasks
-            .Where(t => t.IsDone.Equals(false))
-            .Select(TaskDTO.FromEntity)
-            .ToList();
-        }
-
-        internal List<TaskDTO> GetAllTaskForList(int listId)
-        {
-            return GetListById(listId).Tasks
-            .Select(TaskDTO.FromEntity)
-            .OrderBy(t => t.IsDone)
-            .ToList();
-        }
-
-        internal TaskDTO CreateTaskForList(int listId, TaskEntity task)
-        {
-            GetListById(listId).Tasks.Add(task);
-            TaskListContext.SaveChanges();
-            return TaskDTO.FromEntity(task);
-        }
-
-
-
 
 
         //tasks 
-        internal TaskDTO deleteTask(int id)
+        //get
+        internal IEnumerable<TaskEntity> GetOpenTasksForList(int listId)
         {
-            var removedTask = TaskListContext.Tasks.Where(t => t.TaskId == id).First();
+            return GetListById(listId).Tasks
+            .Where(t => t.IsDone.Equals(false));
+        }
+
+        internal IEnumerable<TaskEntity> GetAllTaskForList(int listId)
+        {
+            return GetListById(listId).Tasks.OrderBy(t => t.IsDone);
+        }
+
+        //create
+        internal TaskEntity CreateTaskForList(int listId, TaskEntity task)
+        {
+            GetListById(listId).Tasks.Add(task);
+            TaskListContext.SaveChanges();
+            return task;
+        }
+
+        internal TaskEntity deleteTask(int id)
+        {
+            var removedTask = TaskListContext.Tasks.Find(id);
             TaskListContext.Tasks.Remove(removedTask);
             TaskListContext.SaveChanges();
-            return new TaskDTO(){TaskId = removedTask.TaskId, Title = removedTask.Title, Desc = removedTask.Desc, IsDone = removedTask.IsDone, DueDate = removedTask.DueDate};
+            return removedTask;
         }
 
 
-        //tasks-edit
-
-        internal TaskDTO replaceTask(TaskDTO task) {
-            var replacedTask = TaskListContext.Tasks.Where(t => t.TaskId == task.TaskId).First();
+        internal TaskEntity replaceTask(TaskEntity task) {
+            var replacedTask = TaskListContext.Tasks.Find(task.TaskId);
 
             replacedTask.Title = task.Title;
             replacedTask.Desc = task.Desc;
@@ -90,70 +79,11 @@ namespace task_lists_api.task_lists
             replacedTask.DueDate = task.DueDate;
 
             TaskListContext.SaveChanges();
-            return task;
+            return replacedTask;
         }
 
-        // internal TaskListEntity GetListByIdWithTasks(int id) {
-        //     return TaskListContext.Lists                
-        //         .Where(l => l.ListId == id)
-        //         .Include(l => l.Tasks)
-        //         .Single();
-        // }
-        // internal TaskListEntity GetListById(int id) {
-        //     return TaskListContext.Lists.First(l => l.ListId == id);
-        // }
-
-
-        // internal TaskListEntity Replace(TaskListEntity item)
-        // {
-        //     TaskListContext.Lists.Update(item);
-        //     TaskListContext.SaveChanges();
-        //     return item;
-        // }
-
-        // internal TaskListEntity Delete(int id) {
-        //     var removeItem = GetListById(id);
-        //     TaskListContext.Lists.Remove(removeItem);
-        //     TaskListContext.SaveChanges();
-        //     return removeItem;
-        // }
-
-        
-
-        // //tasks
-
-        // internal List<TaskEntity> GetTasks(int id) {
-        //     return GetListById(id).Tasks;
-        // }
-
-        // internal List<Task> GetAllTasks()
-        // {
-        //     return items.SelectMany(t => t.subTasks).ToList();
-        // }
-
-        // internal Task ReplaceTask(int listId, int id, Task item)
-        // {
-        //     items[listId].subTasks[id] = item;
-        //     return item;
-        // }
-
-        // internal TaskEntity CreateTaskForList(int listId, TaskEntity task)
-        // {   
-        //     task.ListId = listId;
-        //     task.List = GetListById(listId);
-        //     TaskListContext.Tasks.Add(task);
-        //     TaskListContext.SaveChanges();
-        //     return task;
-        // }
-
-        // internal Task DeleteTaskFromList(int listId, int id) {
-        //     var removeItem = items[listId].subTasks[id];
-        //     items[listId].subTasks.RemoveAt(id);
-        //     return removeItem;
-        // }
 
         //dashboard
-
         internal ActionResult<DashboardDTO> createDashboard() => new DashboardDTO()
         {
             TasksForToday = getCountTasksToday(),
