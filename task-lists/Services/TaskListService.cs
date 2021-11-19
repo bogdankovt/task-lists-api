@@ -17,7 +17,15 @@ namespace task_lists_api.task_lists
         {
             TaskListContext = taskListContext;
         }
+        
+        //global
+        internal TaskEntity FindTask(int id) {
+            return TaskListContext.Tasks.Find(id);
+        }
 
+        internal TaskListEntity FindList(int id) {
+            return TaskListContext.Lists.Find(id);
+        }
 
 
         //lists
@@ -32,12 +40,21 @@ namespace task_lists_api.task_lists
             return item;
         }
 
-        internal TaskListEntity GetListById(int id)
-        {
+        internal TaskListEntity GetListById(int id){
             return TaskListContext.Lists
                     .Include(l => l.Tasks)
                     .FirstOrDefault(l => l.ListId == id);
         }
+
+        internal void DeleteList(TaskListEntity list) {
+            TaskListContext.Lists.Remove(list);
+            TaskListContext.SaveChanges();
+        }
+
+
+            
+
+        
 
 
         //tasks 
@@ -55,22 +72,21 @@ namespace task_lists_api.task_lists
 
         //create
         internal TaskEntity CreateTaskForList(int listId, TaskEntity task)
-        {
+        {   
             GetListById(listId).Tasks.Add(task);
             TaskListContext.SaveChanges();
             return task;
         }
 
-        internal TaskEntity deleteTask(int id)
+        internal void DeleteTask(TaskEntity task)
         {
-            var removedTask = TaskListContext.Tasks.Find(id);
-            TaskListContext.Tasks.Remove(removedTask);
+            TaskListContext.Tasks.Remove(task);
             TaskListContext.SaveChanges();
-            return removedTask;
         }
 
 
-        internal TaskEntity replaceTask(TaskEntity task) {
+        internal TaskEntity ReplaceTask(TaskEntity task) {
+
             var replacedTask = TaskListContext.Tasks.Find(task.TaskId);
 
             replacedTask.Title = task.Title;
@@ -84,7 +100,7 @@ namespace task_lists_api.task_lists
 
 
         //dashboard
-        internal ActionResult<DashboardDTO> createDashboard() => new DashboardDTO()
+        internal DashboardDTO createDashboard() => new DashboardDTO()
         {
             TasksForToday = getCountTasksToday(),
             lists = getCountNotDoneTasksByList()

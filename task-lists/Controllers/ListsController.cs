@@ -27,7 +27,18 @@ namespace task_lists_api.task_lists
         [HttpPost]
         public ActionResult<TaskListEntity> CreateList(TaskListEntity item)
         {   
-            return service.CreateNewList(item);
+            var createdList = service.CreateNewList(item);
+            return Created($"/lists/{createdList.ListId}", createdList);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<TaskListEntity> DeleteList(int id)
+        {    
+            var FindListOrNull = service.FindList(id);
+            if(FindListOrNull != null) {
+                service.DeleteList(FindListOrNull);
+                return NoContent();
+            }else return NotFound();                 
         }
 
     }

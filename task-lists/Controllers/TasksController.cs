@@ -34,20 +34,29 @@ namespace task_lists_api.task_lists
         [HttpPost]
         public ActionResult<TaskDTO> CreateTaskForList(int listId, TaskEntity task)
         {   
-            return TaskDTO.FromEntity(service.CreateTaskForList(listId, task));
+            var createdItem = TaskDTO.FromEntity(service.CreateTaskForList(listId, task));
+            return Created($"/tasks/{createdItem.TaskId}", createdItem);
         }
 
 
-        [HttpPut("{id}")] //remove list id
+
+
+        [HttpPut("{id}")] //change Task
         public ActionResult<TaskDTO> replaceTask(TaskEntity task) 
         {
-            return TaskDTO.FromEntity(service.replaceTask(task));
+            return TaskDTO.FromEntity(service.ReplaceTask(task));
         }
 
         [HttpDelete("{id}")] //remove list id
-        public ActionResult<TaskDTO> deleteTask(int id)
-        {
-            return TaskDTO.FromEntity(service.deleteTask(id));
+        public ActionResult deleteTask(int id)
+        {   
+            var FindTaskOrNull = service.FindTask(id);
+            if(FindTaskOrNull != null) {
+                service.DeleteTask(FindTaskOrNull);
+                return NoContent();
+            }else {
+                return NotFound();
+            }
         }
     }
 }
