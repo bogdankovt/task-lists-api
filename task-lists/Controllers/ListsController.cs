@@ -24,6 +24,12 @@ namespace task_lists_api.task_lists
             return service.GetAllLists();
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<TaskListEntity> GetListById(int id)
+        {
+            return service.GetListById(id);
+        }
+
         [HttpPost]
         public ActionResult<TaskListEntity> CreateList(TaskListEntity item)
         {   

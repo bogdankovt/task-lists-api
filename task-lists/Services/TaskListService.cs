@@ -73,6 +73,7 @@ namespace task_lists_api.task_lists
         //create
         internal TaskEntity CreateTaskForList(int listId, TaskEntity task)
         {   
+            task.DueDate = task.DueDate.Value.ToUniversalTime();
             GetListById(listId).Tasks.Add(task);
             TaskListContext.SaveChanges();
             return task;
@@ -92,7 +93,8 @@ namespace task_lists_api.task_lists
             replacedTask.Title = task.Title;
             replacedTask.Desc = task.Desc;
             replacedTask.IsDone = task.IsDone;
-            replacedTask.DueDate = task.DueDate;
+            replacedTask.DueDate = task.DueDate.Value.ToUniversalTime();
+;
 
             TaskListContext.SaveChanges();
             return replacedTask;
