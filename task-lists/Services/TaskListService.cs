@@ -136,8 +136,8 @@ namespace task_lists_api.task_lists
         {
             return TaskListContext.Tasks
             .Include(t => t.List)
-            .Where(t => t.DueDate.Equals(DateTime.Today))
-            .Select(t => new TaskCollectioTodayDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate, ListTitle = t.List.Title})
+            .Where(t => t.DueDate <= DateTime.Today && t.IsDone == false)
+            .Select(t => new TaskCollectioTodayDTO(){TaskId = t.TaskId, Title = t.Title, Desc = t.Desc, IsDone = t.IsDone, DueDate = t.DueDate, ListTitle = t.List.Title, listId = t.ListId})
             .OrderBy(t => t.IsDone)
             .ToList();
         }

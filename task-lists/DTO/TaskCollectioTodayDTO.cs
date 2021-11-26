@@ -10,5 +10,6 @@ namespace task_lists_api.task_lists.DTO
         public bool IsDone { get; set; }
         public DateTime? DueDate { get; set; }
         public string ListTitle {get; set; }
+        public int listId { get; set; }
     }
 }
